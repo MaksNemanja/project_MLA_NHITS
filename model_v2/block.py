@@ -94,14 +94,11 @@ class Block(nn.Module):
 
         """
         # Prévision via interpolation linéaire
-        time_points_forecast = torch.linspace(0, self.H - 1, steps=self.H)
-        time_points_coeff = torch.linspace(0, self.H - 1, steps=theta_f.size(1))
         y_forecast = F.interpolate(
            theta_f.unsqueeze(1), size=self.H, mode='linear', align_corners=True
         ).squeeze(1)
        
         # Backcast via interpolation
-        time_points_backcast = torch.linspace(0, theta_b.size(1) - 1, steps=theta_b.size(1))
         y_backcast = F.interpolate(
            theta_b.unsqueeze(1), size=self.kernel_size * theta_b.size(1), mode='linear', align_corners=True
         ).squeeze(1)
