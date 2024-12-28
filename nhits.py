@@ -71,14 +71,14 @@ class Stack(nn.Module):
     
 
 class NHITS(nn.Module):
-    def __init__(self,nb_stack, nb_block,input_size,horizon, hidden_sizes, kernel_size, expressiveness_ratio):
+    def __init__(self,nb_stack, nb_block,input_size,horizon, hidden_sizes, kernel_size, expressiveness_ratio_list):
         super(NHITS, self).__init__()
 
         self.stacks = nn.ModuleList()
         self.forecast_storage= [] 
 
         for i in range(nb_stack):
-            new_stack= Stack(nb_block,input_size, horizon, hidden_sizes, kernel_size, expressiveness_ratio)
+            new_stack= Stack(nb_block,input_size, horizon, hidden_sizes, kernel_size, expressiveness_ratio_list[i])
             self.stacks.append(new_stack)
 
     def forward(self, x):
