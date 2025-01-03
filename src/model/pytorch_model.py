@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch.optim as optim
 import pytorch_lightning as pl
-from nhits import NHITS
+from model.nhits import NHITS
 
 
 class NHITSModel(pl.LightningModule):

@@ -1,6 +1,7 @@
 
 import torch
 import numpy as np
+from torch.utils.data import DataLoader, TensorDataset
 
 
 def split_dataset(univariate_data,train_ratio=0.7,val_ratio=0.10,Standardization=True):
@@ -46,3 +47,16 @@ def create_sequences(data, input_size, horizon):
         y.append(data[i + input_size : i + input_size + horizon])  # Fenêtre de sortie (horizon)
 
     return torch.tensor(x,dtype=torch.float32), torch.tensor(y,dtype=torch.float32)
+
+def create_dataset(univariate_data,input_size, horizon, train_ratio=0.7, val_ratio=0.10, Standardization=True):
+
+    train_data,val_data,test_data= split_dataset(univariate_data,train_ratio,val_ratio,Standardization)
+    X_train,Y_train= create_sequences(train_data, input_size, horizon)
+    X_val,Y_val= create_sequences(val_data, input_size, horizon)
+    X_test,Y_test= create_sequences(test_data, input_size, horizon)
+
+    train_dataset = TensorDataset(X_train, Y_train)
+    val_dataset = TensorDataset(X_val, Y_val)
+    test_dataset = TensorDataset(X_test, Y_test)
+
+    return train_dataset,val_dataset,test_dataset

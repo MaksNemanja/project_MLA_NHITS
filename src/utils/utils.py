@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
+from hyperopt import STATUS_OK
 
 
 def evaluate_model(model, dataloader,loss_function= nn.L1Loss() ):
@@ -26,9 +27,29 @@ def evaluate_model(model, dataloader,loss_function= nn.L1Loss() ):
 
     # Moyenne des pertes
     mean_loss = total_loss / num_batches
-    print(f"Validation MAE (Mean Absolute Error): {mean_loss}")
+    #print(f"Mean Loss sur le set de validation entier: {mean_loss}")
 
     return mean_loss, np.concatenate(all_y_true), np.concatenate(all_y_pred)
+
+
+def getBestModelfromTrials(trials):
+    # Filtrer les essais valides
+    valid_trial_list = [trial for trial in trials if STATUS_OK == trial['result']['status']]
+    
+    # Vérifier si des essais valides existent
+    if not valid_trial_list:
+        raise ValueError("Aucun essai valide trouvé.")
+
+    # Extraire les pertes des essais valides
+    losses = [float(trial['result']['loss']) for trial in valid_trial_list]
+    
+    # Trouver l'indice de l'essai avec la perte minimale
+    index_having_minumum_loss = np.argmin(losses)
+    
+    # Récupérer l'objet de l'essai ayant la perte minimale
+    best_trial_obj = valid_trial_list[index_having_minumum_loss]
+    
+    return best_trial_obj
 
 def plot_predictions(input_seq, predictions,true_seq):
         plt.figure()
@@ -45,3 +66,4 @@ def plot_predictions(input_seq, predictions,true_seq):
 
         plt.legend()
         plt.show()
+
