@@ -18,11 +18,12 @@ def objective(params, train_dataset,val_dataset):
     expressiveness_ratio = params['expressiveness_ratio']  
     learning_rate = params['learning_rate']
     random_seed = params['random_seed']
+    shuffle=params['shuffle']
     
     #Set la seed avant un eventuel shuffle du dataloader :
     pl.seed_everything(random_seed)
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     
     # Initialise
